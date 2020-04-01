@@ -70,6 +70,7 @@ document.getElementById('hitBtn').addEventListener('click', hit)
 
 //intro
     //create: dealer, player, deck
+    var player = new Player()
     var dealer = new Dealer()
     let deck1 = new Deck()
     deck1.createDeck(suits, ranks, values)
