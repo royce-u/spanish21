@@ -1,0 +1,22 @@
+ body{
+     background-color: aqua;
+ }
+
+ #board {
+     height: 100px;
+     width: auto;
+     background-color: white;
+ }
+
+ #playerHand {
+    height: 100px;
+    width: auto;
+    color: black;
+    background-color: white;
+}
+
+#messageBoard {
+    height: 100px;
+    width: auto;
+    background-color: white;
+}
