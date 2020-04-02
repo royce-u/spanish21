@@ -1,9 +1,12 @@
-//loop through the hand
-    //count total
-    //count aces
-//if hand has aces & total > 21
-    //minus 1 ace from ace total
-    //log ace total
-//
+//if hand is > 17 && no aces
+    //stand
+//if hand == 17 && contains an ace
+    //hit
+    //call dealer action function
+//if hand is < 16
+    //hit
+    //call dealer action function
+
+
 
 

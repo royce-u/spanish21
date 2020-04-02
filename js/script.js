@@ -9,7 +9,7 @@ class Card {
 }
 
 class Deck {
-    constructor(){
+    constructor() {
         this.deck = []
     }
     createDeck(suits, ranks, values) {
@@ -33,132 +33,191 @@ class Deck {
         return this.deck
     }
 
-    deal(){
+    deal() {
         let hit = []
-            hit.push(this.deck.pop())
+        hit.push(this.deck.pop())
         return hit;
     }
 }
 
+//global variables
 let suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
 let ranks = [2, 3, 4, 5, 6, 7, 8, 9, 'Jack', 'Queen', 'King', 'Ace']
 let values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 11]
 
-class Player{
-    constructor(name){
+//event listeners
+document.getElementById('hitBtn').addEventListener('click', hit)
+document.getElementById('standBtn').addEventListener('click', stand)
+
+class Player {
+    constructor(name) {
         this.playerName = name
         this.upCard = ''
         this.downCard = ''
         this.insBet = false
         this.bank = 0
         this.hand = []
+        this.total = 0
         this.aceCount = 0
     }
 }
 
 class Dealer {
-    constructor(){
+    constructor() {
         this.dealerUpCard = ''
         this.dealerDownCard = ''
-        this.bank = 1000 
+        this.bank = 1000
         this.hand = []
+        this.total = 0
     }
-   
+
 }
 
-document.getElementById('hitBtn').addEventListener('click', hit)
+
 
 //intro
-    //create: dealer, player, deck
-    var player = new Player()
-    var dealer = new Dealer()
-    let deck1 = new Deck()
-    deck1.createDeck(suits, ranks, values)
-    //shuffle
-    deck1.shuffle()
-    //start game function
-    startGame()
-    // console.log(player.hand)
-    console.log('player 1st card: ' + player.hand[0][0].value)
-    console.log('player 2nd card: ' + player.hand[1][0].value)
-    console.log('dealer 1st card: ' + dealer.hand[0][0].value)
-    console.log('dealer 2nd card: ' + dealer.hand[1][0].value)
+//create: dealer, player, deck
+var player = new Player()
+var dealer = new Dealer()
+let deck1 = new Deck()
+deck1.createDeck(suits, ranks, values)
+//shuffle
+deck1.shuffle()
+//start game function
+startGame()
+// console.log(player.hand)
+console.log('player 1st card: ' + player.hand[0][0].value)
+console.log('player 2nd card: ' + player.hand[1][0].value)
+console.log('dealer 1st card: ' + dealer.hand[0][0].value)
+console.log('dealer 2nd card: ' + dealer.hand[1][0].value)
 
 //dealer functions
-    function startGame() {
-        //prompt for bet amounts here
-        //initial deal
-        for (var i = 0; i < 2; i ++) {
-            player.hand.push(deck1.deal())
-            dealer.hand.push(deck1.deal())
-        }
-        document.getElementById('playerHand').textContent = player.hand[0][0].value + ' ' + player.hand[1][0].value
-        document.getElementById('board').textContent = dealer.hand[0][0].value
-        // check for player bj
-        bJCheck()
+function startGame() {
+    //prompt for bet amounts here
+    //initial deal
+    for (var i = 0; i < 2; i++) {
+        player.hand.push(deck1.deal())
+        dealer.hand.push(deck1.deal())
     }
+    document.getElementById('playerHand').textContent = player.hand[0][0].value + ' ' + player.hand[1][0].value
+    document.getElementById('board').textContent = dealer.hand[0][0].value
+    // check for player bj
+    bJCheck()
+}
 
-    //bj function
-    function bJCheck() {
-        if (player.hand[0][0].value + player.hand[1][0].value == 21){
-            console.log('player blackjack')
-            document.getElementById('messageBoard').textContent = 'Player Blackjack'
-            //insert payout function here
-        }
-        if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
-            console.log('dealer bj')
-            document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
-        }
+//bj function
+function bJCheck() {
+    if (player.hand[0][0].value + player.hand[1][0].value == 21) {
+        console.log('player blackjack')
+        document.getElementById('messageBoard').textContent = 'Player Blackjack'
+        //insert payout function here
     }
+    if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
+        console.log('dealer bj')
+        document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
+    }
+}
 
-    //bust checker
-    function bustChecker() {
-        //loop through each card and store totals
-        var tempTotals = []
-        for (var i = 0; i < player.hand.length; i++) {
-            tempTotals.push(player.hand[i][0].value)
-        }
-        // Start running total at max value (every ace is 11)
-        var runningTotal = tempTotals.reduce((acc, x) => acc + x)
-        var aceCount = tempTotals.filter(x => x == 11).length
-        var totals = [runningTotal]
-        var bust = false
-      
-        while (aceCount > 0){
+//bust checker
+function bustChecker() {
+    //loop through each card and store temp totals
+    var tempTotals = []
+    for (var i = 0; i < player.hand.length; i++) {
+        tempTotals.push(player.hand[i][0].value)
+    }
+    // Start running total at max value (every ace is 11)
+    var runningTotal = tempTotals.reduce((acc, x) => acc + x)
+    console.log('running totals: ' + runningTotal)
+    var aceCount = tempTotals.filter(x => x == 11).length
+    var totals = [runningTotal]
+    console.log('totals before: ' + totals)
+    var bust = false
+    //while there are aces in hand
+    while (aceCount > 0) {
+        aceCount--
+        runningTotal -= 10
+        totals.push(runningTotal)
+        console.log('totals after: ' + totals)
+    }
+    //filter thru all totals, keep only ones that aren't busted
+    totals = totals.filter(x => x <= 21)
+    console.log('VALID totals: ' + totals)
+
+    if (!totals.length) {
+        bust = true
+        document.getElementById('hitBtn').disabled = true
+        document.getElementById('messageBoard').textContent = 'BUST!'
+        //dealer action function goes here
+    }
+    player.total = totals
+}
+
+//dealer dealer action
+function dealerAction() {
+    //display 2nd card
+    // document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
+    var tempTotals = []
+    for (var i = 0; i < dealer.hand.length; i++) {
+        tempTotals.push(dealer.hand[i][0].value)
+        console.log('temp totals: ' + tempTotals)
+    }
+    var runningTotal = tempTotals.reduce((acc, x) => acc + x)
+    var aceCount = tempTotals.filter(x => x == 11).length
+    var totals = [runningTotal]
+    //while there are aces in hand - remove 1 ace and minus 10 from total
+    if (runningTotal > 21) {
+        console.log('running total ' + runningTotal)
+        console.log('bust')
+        return
+    }
+    else if (runningTotal == 17 && aceCount == 0){
+        console.log('running total ' + runningTotal)
+        console.log('stand')
+        return
+    }
+    else if (runningTotal == 17 && aceCount > 0){
+        console.log('running total ' + runningTotal)
+        dealer.hand.push(deck1.deal())
+        dealerAction()
+    }
+    else if (runningTotal > 17 && runningTotal< 21) {
+        console.log('running total ' + runningTotal)
+        console.log('stand')
+        return
+    }
+    else if (runningTotal < 17){
+        console.log('running total ' + runningTotal)
+        while (aceCount > 0) {
+            console.log('acecount loop')
             aceCount--
             runningTotal -= 10
-            // console.log('runningTotal now: ' + runningTotal)
-            totals.push(runningTotal)
         }
-      
-        // console.log('all total: ' + totals)
-        totals = totals.filter(x => x <= 21)
-        console.log('VALID totals: ' + totals)
-      
-        if (!totals.length) {
-          bust = true
-          console.log('busted')
-        }
-        return totals
-      }
-
-//player functions
-    //hit  
-    function hit(){
-        player.hand.push(deck1.deal())
-        document.getElementById('playerHand').textContent += ' ' + player.hand[player.hand.length - 1][0].value
-        console.log(player.hand)
-        bustChecker()
+        dealer.hand.push(deck1.deal())
+        dealerAction()
     }
+}
 
-    
+function hit() {
+    player.hand.push(deck1.deal())
+    document.getElementById('playerHand').textContent += ' ' + player.hand[player.hand.length - 1][0].value
+    console.log(player.hand)
+    bustChecker()
+}
 
-
-
-
-
-
-
+//stand
+function stand() {
+    player.total = player.hand[0][0].value + player.hand[1][0].value
+    if (player.total.length > 1) {
+        player.total = Math.max(player.total[0], player.total[1])
+        console.log('player.total-2: ' + player.total)
+    }
+    console.log('player.total: ' + player.total)
+    document.getElementById('messageBoard').textContent = 'Player stands at ' + player.total
+    setTimeout(function () {
+        document.getElementById('messageBoard').textContent = ''
+        dealerAction()
+    }, 2000)
+}
 
 //intro
 
