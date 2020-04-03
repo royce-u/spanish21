@@ -45,10 +45,16 @@ class Deck {
 let suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
 let ranks = [2, 3, 4, 5, 6, 7, 8, 9, 'Jack', 'Queen', 'King', 'Ace']
 let values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 11]
+var player = undefined
+var dealer = undefined
+var deck1 = undefined
 
 //event listeners
 document.getElementById('hitBtn').addEventListener('click', hit)
 document.getElementById('standBtn').addEventListener('click', stand)
+document.getElementById('buy-in-btn').addEventListener('click', function(){
+    player.bank = document.getElementById('buy-in').value
+})
 
 class Player {
     constructor(name) {
@@ -78,38 +84,57 @@ class Dealer {
 
 
 
+
+
 //<-------------------------------------------intro------------------------------------------>
 //create: dealer, player, deck
-var player = new Player()
-var dealer = new Dealer()
-let deck1 = new Deck()
-deck1.createDeck(suits, ranks, values)
-//shuffle
-deck1.shuffle()
+
+
 //start game function
 initGame()
 // console.log(player.hand)
-console.log('player 1st card: ' + player.hand[0][0].value)
-console.log('player 2nd card: ' + player.hand[1][0].value)
-console.log('dealer 1st card: ' + dealer.hand[0][0].value)
-console.log('dealer 2nd card: ' + dealer.hand[1][0].value)
+// console.log('player 1st card: ' + player.hand[0][0].value)
+// console.log('player 2nd card: ' + player.hand[1][0].value)
+// console.log('dealer 1st card: ' + dealer.hand[0][0].value)
+// console.log('dealer 2nd card: ' + dealer.hand[1][0].value)
 
 //<---------------------------------dealer functions -------------------------------->
 function initGame() {
-    //prompt for bet amounts here
-
-    
-    //start game function
-    //initial deal
-    for (var i = 0; i < 2; i++) {
-        player.hand.push(deck1.deal())
-        dealer.hand.push(deck1.deal())
+    player = new Player()
+    dealer = new Dealer()
+    decks = []
+    //create 6 empty decks
+    for (var i = 0; i < 6; i++) {
+        decks.push(new Deck())
     }
-    document.getElementById('playerHand').textContent = player.hand[0][0].value + ' ' + player.hand[1][0].value
-    document.getElementById('board').textContent = dealer.hand[0][0].value
-    // check for player bj
-    bJCheck()
+    //add properties to empty decks
+    for (var i = 0; i < decks.length; i++) {
+        decks[i].createDeck(suits, ranks, values)
+    }
+    //take nested array of arrays - move into flatDecks
+    var flatDecks = []
+    for (var i = 0; i < decks.length; i++) {
+        flatDecks.push(decks[i].deck)
+    }
+    //move arrays of cards to flatdeck
+    let flatDeck = [].concat(...flatDecks)
+    console.log(flatDeck)
+    
+    // console.log(flatDecks)
+    //shuffle
+    // decks.shuffle()
+
 }
+console.log('player: ' + player)
+
+//startGame()
+    //deal first 2 cards
+    //check top card bet
+        //payout
+    //check for player bj
+    //if top card is ace
+        //insurance()
+
 
 //bj function
 function bJCheck() {

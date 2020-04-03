@@ -8,6 +8,16 @@
      background-color: white;
  }
 
+ #bet-Main{
+     height: 2em;
+     width: 2em;
+     background-color: burlywood;
+ }
+ #playerBank{
+    height: 2em;
+     width: 2em;
+     background-color: burlywood;
+ }
  #playerHand {
     height: 100px;
     width: auto;
