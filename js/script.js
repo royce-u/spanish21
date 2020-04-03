@@ -119,11 +119,15 @@ function bJCheck() {
     }
     if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
         document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
+        player.pau = true
+        player.bust = true
         disableAllButtons()
         setTimeout(function(){
             document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
         },2000)
     }
+    //reset function here
+        //use all bets in button to initiate game
 }
 
 //bust checker
@@ -142,6 +146,7 @@ function bustChecker() {
     if (runningTotal == 21){
         document.getElementById('messageBoard').textContent = '21'
         player.pau = true
+        player.bust = true
         preDealer()
         return
     }
@@ -161,16 +166,15 @@ function bustChecker() {
         document.getElementById('hitBtn').disabled = true
         document.getElementById('messageBoard').textContent = 'BUST!'
         preDealer()
-        console.log('do you reach the return statement?')
         return
-        console.log('after the return statement')
     }
     player.total = totals
     if (player.bust == false || player.pau == true){
-        document.getElementById('messageBoard').textContent = 'player has: ' + player.total
+        if (player.total.length > 1) {
+            document.getElementById('messageBoard').textContent = 'player has: ' + player.total[0] + ' or ' + player.total[1]
+        }
+        document.getElementById('messageBoard').textContent = 'player has: ' + player.total[0]
     }
-    console.log('running total end: ' + runningTotal)
-    console.log('totals end: ' + totals)
 }
 
 //dealer action
@@ -182,35 +186,43 @@ function dealerAction() {
     var runningTotal = tempTotals.reduce((acc, x) => acc + x)
     var aceCount = tempTotals.filter(x => x == 11).length
     var totals = [runningTotal]
-    //while there are aces in hand - remove 1 ace and minus 10 from total
+    //if > hard 21 - bust
     if (runningTotal > 21 && aceCount == 0) {
         document.getElementById('messageBoard').textContent = runningTotal + ' Dealer BUST'
         dealer.total = runningTotal
+        console.log('where the fuck?')
         return
     }
-    else if (runningTotal == 17 && aceCount == 0){
-        document.getElementById('messageBoard').textContent = 'Dealer has ' + runningTotal
-        dealer.total = runningTotal       
-        return
-    }
+    //if soft 17 - hit
     else if (runningTotal == 17 && aceCount > 0){
         document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
         dealer.hand.push(deck1.deal())
-        setTimeout(function(){
-            document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
-        },3000)
-        dealerAction()
+        document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
+        console.log('where the fuck?')
     }
-    else if (runningTotal > 17 && runningTotal< 21) {
+    //if > hard 16 && < hard 21 - stand
+    else if (runningTotal >= 17 && aceCount == 0 && runningTotal < 21){
         document.getElementById('messageBoard').textContent = 'Dealer has ' + runningTotal
         dealer.total = runningTotal
+        console.log('where the fuck?')       
         return
     }
+    //if >= soft 18 & < 21
+    else if (aceCount > 1 && runningTotal > 21) {
+        aceCount -= 1
+        runningTotal -= 10
+        document.getElementById('messageBoard').textContent = 'Dealer has ' + runningTotal
+        dealer.total = runningTotal
+        console.log('running total: ' + runningTotal)
+        return
+    }
+    //if running total is less than 17 - hit
     else if (runningTotal < 17){
-        while (aceCount > 0) {
-            aceCount--
-            runningTotal -= 10
-        }
+        // while (aceCount > 0) {
+        //     if (runningTotal < 21)
+        //     aceCount--
+        //     runningTotal -= 10
+        // }
         dealer.hand.push(deck1.deal())
         setTimeout(function(){
             document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
@@ -241,7 +253,6 @@ function preDealer(){
 function hit() {
     player.hand.push(deck1.deal())
     document.getElementById('playerHand').textContent += ' ' + player.hand[player.hand.length - 1][0].value
-    console.log('player total after hit: ' + player.total)
     bustChecker()
 
 }

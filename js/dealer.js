@@ -1,11 +1,19 @@
-//if hand is > 17 && no aces
-    //stand
-//if hand == 17 && contains an ace
+//if > hard 21
+    //bust
+//if soft 17
     //hit
-    //call dealer action function
+//if > hard 16 && < 21
+    //stand
+//if >= 18 w/ aces
+    //if total > 21
+        //acecount--
+        //subtract 10
+    //stand
+
 //if hand is < 16
     //hit
-    //call dealer action function
+//if 21 
+    //stand
 
 
 
