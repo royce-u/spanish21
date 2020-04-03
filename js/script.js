@@ -59,6 +59,8 @@ class Player {
         this.hand = []
         this.total = 0
         this.aceCount = 0
+        this.pau = false
+        this.bust = false
     }
 }
 
@@ -75,7 +77,7 @@ class Dealer {
 
 
 
-//intro
+//<--------------------------------------intro-------------------------------------->
 //create: dealer, player, deck
 var player = new Player()
 var dealer = new Dealer()
@@ -91,7 +93,7 @@ console.log('player 2nd card: ' + player.hand[1][0].value)
 console.log('dealer 1st card: ' + dealer.hand[0][0].value)
 console.log('dealer 2nd card: ' + dealer.hand[1][0].value)
 
-//dealer functions
+//<---------------------------------dealer functions -------------------------------->
 function startGame() {
     //prompt for bet amounts here
     //initial deal
@@ -108,147 +110,167 @@ function startGame() {
 //bj function
 function bJCheck() {
     if (player.hand[0][0].value + player.hand[1][0].value == 21) {
-        console.log('player blackjack')
         document.getElementById('messageBoard').textContent = 'Player Blackjack'
+        player.pau = true
+        player.bust = true
+        disableAllButtons()
+        preDealer()
         //insert payout function here
     }
     if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
-        console.log('dealer bj')
-        document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
+        document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
+        disableAllButtons()
+        setTimeout(function(){
+            document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
+        },2000)
     }
 }
 
 //bust checker
 function bustChecker() {
-    //loop through each card and store temp totals
+    //loop through each card and store in temp totals (values are nested)
     var tempTotals = []
     for (var i = 0; i < player.hand.length; i++) {
         tempTotals.push(player.hand[i][0].value)
     }
-    // Start running total at max value (every ace is 11)
+    // running totals =  max potential value (every ace is 11)
     var runningTotal = tempTotals.reduce((acc, x) => acc + x)
-    console.log('running totals: ' + runningTotal)
+    //sort thru cards arr - count aces
     var aceCount = tempTotals.filter(x => x == 11).length
     var totals = [runningTotal]
-    console.log('totals before: ' + totals)
-    var bust = false
-    //while there are aces in hand
+    //check for bj
+    if (runningTotal == 21){
+        document.getElementById('messageBoard').textContent = '21'
+        player.pau = true
+        preDealer()
+        return
+    }
+    //while there are aces in hand - minus 10 & add to totals(potential total)
     while (aceCount > 0) {
         aceCount--
         runningTotal -= 10
         totals.push(runningTotal)
-        console.log('totals after: ' + totals)
     }
     //filter thru all totals, keep only ones that aren't busted
     totals = totals.filter(x => x <= 21)
     console.log('VALID totals: ' + totals)
-
+    //if there aren't any valid totals, player has busted
     if (!totals.length) {
-        bust = true
+        player.pau = true
+        player.bust = true
         document.getElementById('hitBtn').disabled = true
         document.getElementById('messageBoard').textContent = 'BUST!'
-        //dealer action function goes here
+        preDealer()
+        console.log('do you reach the return statement?')
+        return
+        console.log('after the return statement')
     }
     player.total = totals
+    if (player.bust == false || player.pau == true){
+        document.getElementById('messageBoard').textContent = 'player has: ' + player.total
+    }
+    console.log('running total end: ' + runningTotal)
+    console.log('totals end: ' + totals)
 }
 
-//dealer dealer action
+//dealer action
 function dealerAction() {
-    //display 2nd card
-    // document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
     var tempTotals = []
     for (var i = 0; i < dealer.hand.length; i++) {
         tempTotals.push(dealer.hand[i][0].value)
-        console.log('temp totals: ' + tempTotals)
     }
     var runningTotal = tempTotals.reduce((acc, x) => acc + x)
     var aceCount = tempTotals.filter(x => x == 11).length
     var totals = [runningTotal]
     //while there are aces in hand - remove 1 ace and minus 10 from total
-    if (runningTotal > 21) {
-        console.log('running total ' + runningTotal)
-        console.log('bust')
+    if (runningTotal > 21 && aceCount == 0) {
+        document.getElementById('messageBoard').textContent = runningTotal + ' Dealer BUST'
+        dealer.total = runningTotal
         return
     }
     else if (runningTotal == 17 && aceCount == 0){
-        console.log('running total ' + runningTotal)
-        console.log('stand')
+        document.getElementById('messageBoard').textContent = 'Dealer has ' + runningTotal
+        dealer.total = runningTotal       
         return
     }
     else if (runningTotal == 17 && aceCount > 0){
-        console.log('running total ' + runningTotal)
+        document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
         dealer.hand.push(deck1.deal())
+        setTimeout(function(){
+            document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
+        },3000)
         dealerAction()
     }
     else if (runningTotal > 17 && runningTotal< 21) {
-        console.log('running total ' + runningTotal)
-        console.log('stand')
+        document.getElementById('messageBoard').textContent = 'Dealer has ' + runningTotal
+        dealer.total = runningTotal
         return
     }
     else if (runningTotal < 17){
-        console.log('running total ' + runningTotal)
         while (aceCount > 0) {
-            console.log('acecount loop')
             aceCount--
             runningTotal -= 10
         }
         dealer.hand.push(deck1.deal())
+        setTimeout(function(){
+            document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
+            document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
+            dealerAction()
+        }, 3000)
+    }
+    
+}
+
+// //payout
+// function payOut(){
+    
+// }
+
+//intro to dealer action
+function preDealer(){
+    //display dealers 2nd card
+    document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
+    //run reset function here
+    //if player busts or gets bj - don't run dealer action
+    if (player.bust == false || player.pau == false) {
         dealerAction()
     }
 }
 
+// <---------------------------------player functions -------------------------------->
 function hit() {
     player.hand.push(deck1.deal())
     document.getElementById('playerHand').textContent += ' ' + player.hand[player.hand.length - 1][0].value
-    console.log(player.hand)
+    console.log('player total after hit: ' + player.total)
     bustChecker()
+
 }
 
 //stand
 function stand() {
-    player.total = player.hand[0][0].value + player.hand[1][0].value
+    //if the array of potential totals are more than 1
     if (player.total.length > 1) {
+        //take the higher potential total and assign it to players hand
         player.total = Math.max(player.total[0], player.total[1])
-        console.log('player.total-2: ' + player.total)
+    }
+    //if there player stands on 1st 2 cards - add total to player.total
+    if (player.hand.length == 2) {
+        player.total = player.hand[0][0].value + player.hand[1][0].value
     }
     console.log('player.total: ' + player.total)
+    //log players playable total
     document.getElementById('messageBoard').textContent = 'Player stands at ' + player.total
+    //set delay to clear board & turn it over to the dealer
     setTimeout(function () {
         document.getElementById('messageBoard').textContent = ''
-        dealerAction()
+        preDealer()
     }, 2000)
 }
 
-//intro
-
-//start game function
-    //enter number of players
-    //place bets
-
-//dealer functions
-    //clear board
-    //deal
-
-//player functions
-    //create split function
-        //add new div
-            //max of 4 hands
-    //create double function
-        //add new div
-            //no double double 
-    //create surrender function
-        //trash cards
-        //return half of bet
-    //create insurance function
-        //remove cards
-        //take bet
-        //insurance payout 
-
-//create payout functions
-    //insurance
-    //blackjack
-    //special 21 payouts
-    //top/bottom match bet payout
-    //insurance
-    //double 
-    //split
+//disable all buttons
+function disableAllButtons(){
+    document.getElementById('hitBtn').disabled = true
+    document.getElementById('standBtn').disabled = true
+    document.getElementById('splitBtn').disabled = true
+    document.getElementById('doubleBtn').disabled = true
+}
