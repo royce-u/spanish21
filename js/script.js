@@ -146,23 +146,25 @@ function bustChecker() {
     //sort thru cards arr - count aces
     var aceCount = tempTotals.filter(x => x == 11).length
     var totals = [runningTotal]
-    //check for bj
+    //check for 21
     if (runningTotal == 21){
-        document.getElementById('messageBoard').textContent = '21'
+        document.getElementById('messageBoard').textContent = 'Player has 21'
         player.pau = true
         player.bust = true
         preDealer()
+        player.total = runningTotal
         return
     }
-    //while there are aces in hand - minus 10 & add to totals(potential total)
+    //while there are aces in hand - minus 10 & add to potential totals(totals)
     while (aceCount > 0) {
         aceCount--
         runningTotal -= 10
         totals.push(runningTotal)
     }
-    //filter thru all totals, keep only ones that aren't busted
+    //filter thru all potential totals, keep only ones that aren't busted
     totals = totals.filter(x => x <= 21)
     console.log('VALID totals: ' + totals)
+    player.total = totals
     //if there aren't any valid totals, player has busted
     if (!totals.length) {
         player.pau = true
@@ -172,13 +174,13 @@ function bustChecker() {
         preDealer()
         return
     }
-    player.total = totals
-    if (player.bust == false || player.pau == true){
-        if (player.total.length > 1) {
-            document.getElementById('messageBoard').textContent = 'player has: ' + player.total[0] + ' or ' + player.total[1]
-        }
-        document.getElementById('messageBoard').textContent = 'player has: ' + player.total[0]
+    //if multiple total options, display both
+    if (totals > 1) {
+        document.getElementById('messageBoard').textContent = totals[0] + ' or ' + totals[1]
     }
+    //display total
+    document.getElementById('messageBoard').textContent = 'player has: ' + totals
+
 }
 
 //dealer action
@@ -269,7 +271,6 @@ function hit() {
     player.hand.push(deck1.deal())
     document.getElementById('playerHand').textContent += ' ' + player.hand[player.hand.length - 1][0].value
     bustChecker()
-
 }
 
 //stand
@@ -279,10 +280,11 @@ function stand() {
         //take the higher potential total and assign it to players hand
         player.total = Math.max(player.total[0], player.total[1])
     }
-    //if there player stands on 1st 2 cards - add total to player.total
+    //if player stands on 1st 2 cards - add total to player.total
     if (player.hand.length == 2) {
         player.total = player.hand[0][0].value + player.hand[1][0].value
     }
+
     console.log('player.total: ' + player.total)
     //log players playable total
     document.getElementById('messageBoard').textContent = 'Player stands at ' + player.total
