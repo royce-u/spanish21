@@ -20,6 +20,14 @@
     //on 'all bets in button' click 
         //startGame()
 
+//playerBuyIn()
+    //create player class
+    //prompt for name
+    //prompt for buy in
+    
+//prompt for bets()
+    //on 'all bets in button' click 
+        //startGame()
 
 //startGame()
     //deal first 2 cards
@@ -28,7 +36,6 @@
     //check for player bj
     //if top card is ace
         //insurance()
-
 //after player action --------->
     //payout()
     //clear board

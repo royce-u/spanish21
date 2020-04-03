@@ -1,4 +1,12 @@
 //<--------------------------------------globals & things-------------------------------------->
+//global variables
+let suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+let ranks = [2, 3, 4, 5, 6, 7, 8, 9, 'Jack', 'Queen', 'King', 'Ace']
+let values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 11]
+var player = undefined
+var dealer = undefined
+let deck1 = undefined
+
 //create deck of cards - 5 - remove 10s 
 class Card {
     constructor(suit, rank, value) {
@@ -33,7 +41,6 @@ class Deck {
         }
         return this.deck
     }
-
     deal() {
         let hit = []
         hit.push(this.deck.pop())
@@ -91,7 +98,7 @@ class Dealer {
 
 
 //start game function
-initGame()
+
 // console.log(player.hand)
 // console.log('player 1st card: ' + player.hand[0][0].value)
 // console.log('player 2nd card: ' + player.hand[1][0].value)
@@ -136,28 +143,31 @@ console.log('player: ' + player)
         //insurance()
 
 
+// bJCheck()
+
+
 //bj function
-function bJCheck() {
-    if (player.hand[0][0].value + player.hand[1][0].value == 21) {
-        document.getElementById('messageBoard').textContent = 'Player Blackjack'
-        player.pau = true
-        player.bust = true
-        disableAllButtons()
-        preDealer()
-        //insert payout function here
-    }
-    if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
-        document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
-        player.pau = true
-        player.bust = true
-        disableAllButtons()
-        setTimeout(function(){
-            document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
-        },2000)
-    }
-    //reset function here
-        //use all bets in button to initiate game
-}
+// function bJCheck() {
+//     if (player.hand[0][0].value + player.hand[1][0].value == 21) {
+//         document.getElementById('messageBoard').textContent = 'Player Blackjack'
+//         player.pau = true
+//         player.bust = true
+//         disableAllButtons()
+//         preDealer()
+//         //insert payout function here
+//     }
+//     if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
+//         document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
+//         player.pau = true
+//         player.bust = true
+//         disableAllButtons()
+//         setTimeout(function(){
+//             document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
+//         },2000)
+//     }
+//     //reset function here
+//         //use all bets in button to initiate game
+// }
 
 //bust checker
 function bustChecker() {
@@ -194,7 +204,7 @@ function bustChecker() {
     if (!totals.length) {
         player.pau = true
         player.bust = true
-        document.getElementById('hitBtn').disabled = true
+        // document.getElementById('hitBtn').disabled = true
         document.getElementById('messageBoard').textContent = 'BUST!'
         preDealer()
         return
@@ -275,13 +285,8 @@ function dealerAction() {
     
 }
 
-// //payout
-// function payOut(){
-    
-// }
-
 //intro to dealer action
-function preDealer(){
+function preDealer() {
     //display dealers 2nd card
     document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
     //run reset function here
@@ -289,6 +294,10 @@ function preDealer(){
     if (player.bust == false || player.pau == false) {
         dealerAction()
     }
+}
+
+function cashIn() {
+    player.bank = document.getElementById('buy-in-amt').value
 }
 
 // <---------------------------------player functions -------------------------------->
@@ -317,14 +326,21 @@ function stand() {
     setTimeout(function () {
         document.getElementById('messageBoard').textContent = ''
         preDealer()
-        disableAllButtons()
+        // disableAllButtons()
     }, 2000)
 }
 
-//disable all buttons
+// disable all buttons
 function disableAllButtons(){
     document.getElementById('hitBtn').disabled = true
     document.getElementById('standBtn').disabled = true
     document.getElementById('splitBtn').disabled = true
     document.getElementById('doubleBtn').disabled = true
 }
+
+//event listeners
+document.addEventListener('DOMContentLoaded', initGame)
+document.getElementById('hitBtn').addEventListener('click', hit)
+document.getElementById('standBtn').addEventListener('click', stand)
+document.getElementById('buy-in-btn').addEventListener('click', cashIn)
+
