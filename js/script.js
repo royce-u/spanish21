@@ -48,14 +48,6 @@ class Deck {
     }
 }
 
-
-//event listeners
-document.getElementById('hitBtn').addEventListener('click', hit)
-document.getElementById('standBtn').addEventListener('click', stand)
-document.getElementById('buy-in-btn').addEventListener('click', function(){
-    player.bank = document.getElementById('buy-in').value
-})
-
 class Player {
     constructor(name) {
         this.playerName = name
@@ -83,12 +75,8 @@ class Dealer {
 }
 
 
-
-
-
 //<-------------------------------------------intro------------------------------------------>
 //create: dealer, player, deck
-
 
 //start game function
 
@@ -118,14 +106,9 @@ function initGame() {
     }
     //move arrays of cards to flatdeck
     let flatDeck = [].concat(...flatDecks)
-    console.log(flatDeck)
-    
-    // console.log(flatDecks)
-    //shuffle
-    // decks.shuffle()
-
+    console.log(flatDeck.length)
 }
-console.log('player: ' + player)
+// console.log('player: ' + player)
 
 //startGame()
     //deal first 2 cards
@@ -238,7 +221,7 @@ function dealerAction() {
     //if soft 17 - hit
     else if (runningTotal == 17 && aceCount == 1){
         document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
-        dealer.hand.push(deck1.deal())
+        dealer.hand.push(flatD.deal())
         document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
         console.log('running total: ' + runningTotal)
         console.log('ace count: ' + aceCount)
@@ -268,7 +251,7 @@ function dealerAction() {
         //     aceCount--
         //     runningTotal -= 10
         // }
-        dealer.hand.push(deck1.deal())
+        dealer.hand.push(flatDeck.deal())
         document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
         document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
         console.log('running total: ' + runningTotal)
@@ -295,7 +278,7 @@ function cashIn() {
 
 // <---------------------------------player functions -------------------------------->
 function hit() {
-    player.hand.push(deck1.deal())
+    player.hand.push(flatDeck.deal())
     document.getElementById('playerHand').textContent += ' ' + player.hand[player.hand.length - 1][0].value
     bustChecker()
 }
