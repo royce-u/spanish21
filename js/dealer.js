@@ -1,20 +1,37 @@
-//if > hard 21
-    //bust
-//if soft 17
-    //hit
-//if > hard 16 && < 21
-    //stand
-//if >= 18 w/ aces
-    //if total > 21
-        //acecount--
-        //subtract 10
-    //stand
+//outside of errthang
+    //create blank global vars
+        //player (multiples if setting up for > 1 player)
+        //dealer
 
-//if hand is < 16
-    //hit
-//if 21 
-    //stand
+//game init()
+    //create dealer class
+    //create deck
+    //shuffle deck
+    //prompt buy in()
+        //func below
+    //prompt for bets()
 
+//playerBuyIn()
+    //create player class
+    //prompt for name
+    //prompt for buy in
+    
+//prompt for bets()
+    //on 'all bets in button' click 
+        //startGame()
 
-
-
+    
+//startGame()
+    //deal first 2 cards
+    //check top card bet
+        //payout
+    //check for player bj
+    //if top card is ace
+        //insurance()
+    
+//after player action --------->
+    //payout()
+    //clear board
+    //prompt bets
+    
+        

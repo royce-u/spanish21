@@ -7,12 +7,23 @@
      width: auto;
      background-color: white;
  }
+ #bet-Main {
+     height: 1.5em;
+     width: 2em;
+     background-color: burlywood;
+ }
 
  #playerHand {
-    height: 100px;
-    width: auto;
+    height: 5em;
+    width: 5em;
     color: black;
     background-color: white;
+}
+
+#playerBank {
+    height: 1.5em;
+    width: 2em;
+    background-color: burlywood;
 }
 
 #messageBoard {

@@ -1,4 +1,12 @@
 //<--------------------------------------globals & things-------------------------------------->
+//global variables
+let suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+let ranks = [2, 3, 4, 5, 6, 7, 8, 9, 'Jack', 'Queen', 'King', 'Ace']
+let values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 11]
+var player = undefined
+var dealer = undefined
+let deck1 = undefined
+
 //create deck of cards - 5 - remove 10s 
 class Card {
     constructor(suit, rank, value) {
@@ -33,22 +41,12 @@ class Deck {
         }
         return this.deck
     }
-
     deal() {
         let hit = []
         hit.push(this.deck.pop())
         return hit;
     }
 }
-
-//global variables
-let suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-let ranks = [2, 3, 4, 5, 6, 7, 8, 9, 'Jack', 'Queen', 'King', 'Ace']
-let values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 11]
-
-//event listeners
-document.getElementById('hitBtn').addEventListener('click', hit)
-document.getElementById('standBtn').addEventListener('click', stand)
 
 class Player {
     constructor(name) {
@@ -76,63 +74,63 @@ class Dealer {
 
 }
 
-
-
 //<-------------------------------------------intro------------------------------------------>
-//create: dealer, player, deck
-var player = new Player()
-var dealer = new Dealer()
-let deck1 = new Deck()
-deck1.createDeck(suits, ranks, values)
-//shuffle
-deck1.shuffle()
+
 //start game function
-initGame()
+
 // console.log(player.hand)
-console.log('player 1st card: ' + player.hand[0][0].value)
-console.log('player 2nd card: ' + player.hand[1][0].value)
-console.log('dealer 1st card: ' + dealer.hand[0][0].value)
-console.log('dealer 2nd card: ' + dealer.hand[1][0].value)
+// console.log('player 1st card: ' + player.hand[0][0].value)
+// console.log('player 2nd card: ' + player.hand[1][0].value)
+// console.log('dealer 1st card: ' + dealer.hand[0][0].value)
+// console.log('dealer 2nd card: ' + dealer.hand[1][0].value)
 
 //<---------------------------------dealer functions -------------------------------->
 function initGame() {
+    //create: dealer, player, deck
+    var player = new Player()
+    var dealer = new Dealer()
+    let deck1 = new Deck()
+    deck1.createDeck(suits, ranks, values)
+    //shuffle
+    deck1.shuffle()
     //prompt for bet amounts here
-
     
     //start game function
     //initial deal
-    for (var i = 0; i < 2; i++) {
-        player.hand.push(deck1.deal())
-        dealer.hand.push(deck1.deal())
-    }
-    document.getElementById('playerHand').textContent = player.hand[0][0].value + ' ' + player.hand[1][0].value
-    document.getElementById('board').textContent = dealer.hand[0][0].value
-    // check for player bj
-    bJCheck()
+//     for (var i = 0; i < 2; i++) {
+//         player.hand.push(deck1.deal())
+//         dealer.hand.push(deck1.deal())
+//     }
+//     document.getElementById('playerHand').textContent = player.hand[0][0].value + ' ' + player.hand[1][0].value
+//     document.getElementById('board').textContent = dealer.hand[0][0].value
+//     // check for player bj
 }
 
+// bJCheck()
+
+
 //bj function
-function bJCheck() {
-    if (player.hand[0][0].value + player.hand[1][0].value == 21) {
-        document.getElementById('messageBoard').textContent = 'Player Blackjack'
-        player.pau = true
-        player.bust = true
-        disableAllButtons()
-        preDealer()
-        //insert payout function here
-    }
-    if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
-        document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
-        player.pau = true
-        player.bust = true
-        disableAllButtons()
-        setTimeout(function(){
-            document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
-        },2000)
-    }
-    //reset function here
-        //use all bets in button to initiate game
-}
+// function bJCheck() {
+//     if (player.hand[0][0].value + player.hand[1][0].value == 21) {
+//         document.getElementById('messageBoard').textContent = 'Player Blackjack'
+//         player.pau = true
+//         player.bust = true
+//         disableAllButtons()
+//         preDealer()
+//         //insert payout function here
+//     }
+//     if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
+//         document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
+//         player.pau = true
+//         player.bust = true
+//         disableAllButtons()
+//         setTimeout(function(){
+//             document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
+//         },2000)
+//     }
+//     //reset function here
+//         //use all bets in button to initiate game
+// }
 
 //bust checker
 function bustChecker() {
@@ -167,7 +165,7 @@ function bustChecker() {
     if (!totals.length) {
         player.pau = true
         player.bust = true
-        document.getElementById('hitBtn').disabled = true
+        // document.getElementById('hitBtn').disabled = true
         document.getElementById('messageBoard').textContent = 'BUST!'
         preDealer()
         return
@@ -248,13 +246,8 @@ function dealerAction() {
     
 }
 
-// //payout
-// function payOut(){
-    
-// }
-
 //intro to dealer action
-function preDealer(){
+function preDealer() {
     //display dealers 2nd card
     document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
     //run reset function here
@@ -262,6 +255,10 @@ function preDealer(){
     if (player.bust == false || player.pau == false) {
         dealerAction()
     }
+}
+
+function cashIn() {
+    player.bank = document.getElementById('buy-in-amt').value
 }
 
 // <---------------------------------player functions -------------------------------->
@@ -290,14 +287,21 @@ function stand() {
     setTimeout(function () {
         document.getElementById('messageBoard').textContent = ''
         preDealer()
-        disableAllButtons()
+        // disableAllButtons()
     }, 2000)
 }
 
-//disable all buttons
+// disable all buttons
 function disableAllButtons(){
     document.getElementById('hitBtn').disabled = true
     document.getElementById('standBtn').disabled = true
     document.getElementById('splitBtn').disabled = true
     document.getElementById('doubleBtn').disabled = true
 }
+
+//event listeners
+document.addEventListener('DOMContentLoaded', initGame)
+document.getElementById('hitBtn').addEventListener('click', hit)
+document.getElementById('standBtn').addEventListener('click', stand)
+document.getElementById('buy-in-btn').addEventListener('click', cashIn)
+
