@@ -48,13 +48,6 @@ class Deck {
     }
 }
 
-//global variables
-let suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-let ranks = [2, 3, 4, 5, 6, 7, 8, 9, 'Jack', 'Queen', 'King', 'Ace']
-let values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 11]
-var player = undefined
-var dealer = undefined
-var deck1 = undefined
 
 //event listeners
 document.getElementById('hitBtn').addEventListener('click', hit)
