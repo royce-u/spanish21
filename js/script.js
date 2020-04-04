@@ -3,9 +3,9 @@
 let suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
 let ranks = [2, 3, 4, 5, 6, 7, 8, 9, 'Jack', 'Queen', 'King', 'Ace']
 let values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 11]
-var player = undefined
-var dealer = undefined
-let deck1 = undefined
+var player
+var dealer
+let decks
 
 //create deck of cards - 5 - remove 10s 
 class Card {
@@ -22,9 +22,11 @@ class Deck {
         this.deck = []
     }
     createDeck(suits, ranks, values) {
-        for (let suit of suits) {
-            for (let i = 0; i < ranks.length; i++) {
-                this.deck.push(new Card(suit, ranks[i], values[i]));
+        for (let j = 0; j <= 5; j++){
+            for (let suit of suits) {
+                for (let i = 0; i < ranks.length; i++) {
+                    this.deck.push(new Card(suit, ranks[i], values[i]));
+                }
             }
         }
         return this.deck;
@@ -90,22 +92,25 @@ class Dealer {
 function initGame() {
     player = new Player()
     dealer = new Dealer()
-    decks = []
-    //create 6 empty decks
-    for (var i = 0; i < 6; i++) {
-        decks.push(new Deck())
-    }
-    //add properties to empty decks
-    for (var i = 0; i < decks.length; i++) {
-        decks[i].createDeck(suits, ranks, values)
-    }
-    //take nested array of arrays - move into flatDecks
-    var flatDecks = []
-    for (var i = 0; i < decks.length; i++) {
-        flatDecks.push(decks[i].deck)
-    }
-    //move arrays of cards to flatdeck
-    let flatDeck = [].concat(...flatDecks)
+    decks = new Deck()
+    decks.createDeck(suits,ranks,values)
+    // //create 6 empty decks
+    // for (var i = 0; i < 6; i++) {
+    //     decks.push(new Deck())
+    // }
+    // //add properties to empty decks
+    // for (var i = 0; i < decks.length; i++) {
+    //     decks[i].createDeck(suits, ranks, values)
+    // }
+    // //take nested array of arrays - move into flatDecks
+    // var flatDecks = []
+    // for (var i = 0; i < decks.length; i++) {
+    //     flatDecks.push(decks[i].deck)
+    // }
+    // //move arrays of cards to flatdeck
+    // flatDeck = [].concat(...flatDecks)
+    console.log(decks)
+    console.log(typeof decks)
     document.getElementById('messageBoard').textContent= 'Enter buy-in amount below' 
 }
 
@@ -115,7 +120,16 @@ function preStart(){
 }
 
 function startGame(){
-    
+    // initial deal
+    for (var i = 0; i < 2; i++) {
+        player.hand.push(decks.deal())
+        dealer.hand.push(decks.deal())
+    }
+    //display open hands
+    document.getElementById('playerHand').textContent = player.hand[0][0].value + ' ' + player.hand[1][0].value
+    document.getElementById('board').textContent = dealer.hand[0][0].value
+    //check for bj
+    bJChecker()  
 }
 
 // console.log('player: ' + player)
@@ -132,28 +146,26 @@ function startGame(){
 // bJCheck()
 
 
-//bj function
-// function bJCheck() {
-//     if (player.hand[0][0].value + player.hand[1][0].value == 21) {
-//         document.getElementById('messageBoard').textContent = 'Player Blackjack'
-//         player.pau = true
-//         player.bust = true
-//         disableAllButtons()
-//         preDealer()
-//         //insert payout function here
-//     }
-//     if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
-//         document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
-//         player.pau = true
-//         player.bust = true
-//         disableAllButtons()
-//         setTimeout(function(){
-//             document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
-//         },2000)
-//     }
-//     //reset function here
-//         //use all bets in button to initiate game
-// }
+// bj check
+function bJChecker() {
+    if (player.hand[0][0].value + player.hand[1][0].value == 21) {
+        document.getElementById('messageBoard').textContent = 'Player Blackjack'
+        player.pau = true
+        player.bust = true
+        disableAllButtons()
+        preDealer()
+        //insert payout function here
+    }
+    if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
+        document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
+        player.pau = true
+        player.bust = true
+        disableAllButtons()
+        setTimeout(function(){
+            document.getElementById('messageBoard').textContent = 'Dealer Blackjack'
+        },2000)
+    }
+}
 
 //bust checker
 function bustChecker() {
@@ -337,4 +349,5 @@ document.addEventListener('DOMContentLoaded', initGame)
 document.getElementById('hitBtn').addEventListener('click', hit)
 document.getElementById('standBtn').addEventListener('click', stand)
 document.getElementById('buy-in-btn').addEventListener('click', cashIn)
+document.getElementById('main-bet-in-btn').addEventListener('click', startGame)
 
