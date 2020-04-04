@@ -12,17 +12,9 @@
      width: 2em;
      background-color: burlywood;
  }
-
- #bet-Main{
-     height: 2em;
-     width: 2em;
-     background-color: burlywood;
- }
- #playerBank{
-    height: 2em;
-     width: 2em;
-     background-color: burlywood;
- }
+#bets-container {
+    display: none;
+}
  #playerHand {
     height: 5em;
     width: 5em;

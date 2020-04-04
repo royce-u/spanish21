@@ -76,9 +76,9 @@ class Dealer {
 
 
 //<-------------------------------------------intro------------------------------------------>
-//create: dealer, player, deck
+//prompt for cash in 
 
-//start game function
+
 
 // console.log(player.hand)
 // console.log('player 1st card: ' + player.hand[0][0].value)
@@ -106,8 +106,18 @@ function initGame() {
     }
     //move arrays of cards to flatdeck
     let flatDeck = [].concat(...flatDecks)
-    console.log(flatDeck.length)
+    document.getElementById('messageBoard').textContent= 'Enter buy-in amount below' 
 }
+
+function preStart(){
+    document.getElementById('messageBoard').textContent = 'Place your bets below'
+    document.getElementById('bets-container').style.display = 'block'
+}
+
+function startGame(){
+    
+}
+
 // console.log('player: ' + player)
 
 //startGame()
@@ -273,7 +283,15 @@ function preDealer() {
 }
 
 function cashIn() {
+    //add entered amount to players bank
     player.bank = document.getElementById('buy-in-amt').value
+    //hide buy-in button
+    document.getElementById('cash-container').style.visibility = 'hidden';
+    document.getElementById('messageBoard').textContent = 'Changing  $' + player.bank
+    setInterval(function(){
+        document.getElementById('messageBoard').textContent = 'Good Luck!'    
+    }, 2000)
+    preStart()
 }
 
 // <---------------------------------player functions -------------------------------->
