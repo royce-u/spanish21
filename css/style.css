@@ -7,10 +7,13 @@
      width: auto;
      background-color: white;
  }
- #bet-Main {
-     height: 1.5em;
-     width: 2em;
-     background-color: burlywood;
+ #bet-main {
+    height: 2em;
+    width: 2em;
+    border: 2px solid green;
+    border-radius: 20px;
+    color: white;
+    background-color: green
  }
 #bets-container {
     display: none;
@@ -25,6 +28,7 @@
 #playerBank {
     height: 1.5em;
     width: 2em;
+    color: white;
     background-color: burlywood;
 }
 
@@ -32,4 +36,8 @@
     height: 100px;
     width: auto;
     background-color: white;
+}
+
+#cash-container {
+    display: block;
 }

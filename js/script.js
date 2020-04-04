@@ -6,6 +6,8 @@ let values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 11]
 var player
 var dealer
 let decks
+let msgBoard = document.getElementById('messageBoard')
+let playerMainBetBox = document.getElementById('bet-main')
 
 //create deck of cards - 5 - remove 10s 
 class Card {
@@ -56,6 +58,7 @@ class Player {
         this.upCard = ''
         this.downCard = ''
         this.insBet = false
+        this.mainBet 
         this.bank = 0
         this.hand = []
         this.total = 0
@@ -72,15 +75,13 @@ class Dealer {
         this.bank = 1000
         this.hand = []
         this.total = 0
+        this.bust = false
     }
 
 }
 
-
 //<-------------------------------------------intro------------------------------------------>
 //prompt for cash in 
-
-
 
 // console.log(player.hand)
 // console.log('player 1st card: ' + player.hand[0][0].value)
@@ -109,8 +110,6 @@ function initGame() {
     // }
     // //move arrays of cards to flatdeck
     // flatDeck = [].concat(...flatDecks)
-    console.log(decks)
-    console.log(typeof decks)
     document.getElementById('messageBoard').textContent= 'Enter buy-in amount below' 
 }
 
@@ -120,6 +119,11 @@ function preStart(){
 }
 
 function startGame(){
+    //add bet amount to players bet propert
+    player.mainBet = document.getElementById('main-bet-in').value
+    //subtract bet from players bank & display
+    player.bank -= player.mainBet
+    document.getElementById('bet-main').textContent = player.mainBet.value
     // initial deal
     for (var i = 0; i < 2; i++) {
         player.hand.push(decks.deal())
@@ -132,20 +136,6 @@ function startGame(){
     bJChecker()  
 }
 
-// console.log('player: ' + player)
-
-//startGame()
-    //deal first 2 cards
-    //check top card bet
-        //payout
-    //check for player bj
-    //if top card is ace
-        //insurance()
-
-
-// bJCheck()
-
-
 // bj check
 function bJChecker() {
     if (player.hand[0][0].value + player.hand[1][0].value == 21) {
@@ -153,6 +143,10 @@ function bJChecker() {
         player.pau = true
         player.bust = true
         disableAllButtons()
+        dealer.bank -= (player.mainBet * 3/2)
+        player.mainBet += (player.mainBet * 3/2)
+        
+
         preDealer()
         //insert payout function here
     }
@@ -227,26 +221,29 @@ function dealerAction() {
     var totals = [runningTotal]
     //if 21 - quit
     if (runningTotal == 21) {
+        dealer.total = 21
         document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
         document.getElementById('messageBoard').textContent = 'Dealer has ' + runningTotal
-        console.log('running total: ' + runningTotal)
-        console.log('ace count: ' + aceCount)
+        payOut()
         return
+        console.log('do you make it past return?')
     }
     //if > hard 21 - bust
     else if (runningTotal > 21 && aceCount == 0) {
+        dealer.bust = true
         document.getElementById('messageBoard').textContent = runningTotal + ' Dealer BUST'
         dealer.total = runningTotal
         console.log('running total: ' + runningTotal)
+        payOut()
         return
+        console.log('do you make it past return?')
     }
     //if soft 17 - hit
     else if (runningTotal == 17 && aceCount == 1){
         document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
-        dealer.hand.push(flatD.deal())
+        dealer.hand.push(decks.deal())
         document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
-        console.log('running total: ' + runningTotal)
-        console.log('ace count: ' + aceCount)
+        dealerAction()
     }
     //if > hard 16 && < hard 21 - stand
     else if (runningTotal >= 17 && runningTotal < 21){
@@ -254,7 +251,9 @@ function dealerAction() {
         dealer.total = runningTotal
         console.log('running total: ' + runningTotal)  
         console.log('ace count: ' + aceCount)  
+        payOut()
         return
+        console.log('do you make it past return?')
     }
     //if soft and > 21
     else if (aceCount > 1 && runningTotal > 21) {
@@ -273,7 +272,7 @@ function dealerAction() {
         //     aceCount--
         //     runningTotal -= 10
         // }
-        dealer.hand.push(flatDeck.deal())
+        dealer.hand.push(decks.deal())
         document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
         document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
         console.log('running total: ' + runningTotal)
@@ -289,7 +288,7 @@ function preDealer() {
     document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
     //run reset function here
     //if player busts or gets bj - don't run dealer action
-    if (player.bust == false || player.pau == false) {
+    if (player.bust == false && player.pau == false) {
         dealerAction()
     }
 }
@@ -297,18 +296,48 @@ function preDealer() {
 function cashIn() {
     //add entered amount to players bank
     player.bank = document.getElementById('buy-in-amt').value
+    console.log('player bank: ' + player.bank)
     //hide buy-in button
-    document.getElementById('cash-container').style.visibility = 'hidden';
-    document.getElementById('messageBoard').textContent = 'Changing  $' + player.bank
-    setInterval(function(){
-        document.getElementById('messageBoard').textContent = 'Good Luck!'    
-    }, 2000)
+    document.getElementById('cash-container').style.display = 'none'
+    document.getElementById('messageBoard').textContent = 'Changing  $'
+    document.getElementById('messageBoard').textContent = 'Good Luck!'
+    document.getElementById('playerBank').textContent = player.bank
     preStart()
+
+}
+
+function payOut() {
+    //if dealer bust - pay
+    if (dealer.bust == true) {
+        //subtract amount from dealer bank
+        dealer.bank -= player.mainBet
+        //pay player double
+        player.mainBet *= 2
+        playerMainBetBox.textContent = player.mainBet
+    }
+    //if dealer wins - take
+    else if (dealer.total > player.total) {
+        dealer.bank += player.mainBet
+        player.mainBet -= player.mainBet
+        playerMainBetBox.textContent = player.mainBet
+    }
+    //if dealer lose - pay
+    else if (dealer.total < player.total) {
+        dealer.bank -= dealer.mainBet
+        player.mainBet += player.mainBet
+        playerMainBetBox.textContent = player.mainBet
+    }
+    //if push - push
+    else if (dealer.total == player.total) {
+        msgBoard.textContent = 'PUSH'
+    }
+    //move money from bet spot to player bank & display
+    playerMainBetBox.textContent = player.mainBet
 }
 
 // <---------------------------------player functions -------------------------------->
 function hit() {
-    player.hand.push(flatDeck.deal())
+    player.hand.push(decks.deal())
     document.getElementById('playerHand').textContent += ' ' + player.hand[player.hand.length - 1][0].value
     bustChecker()
 }
@@ -344,10 +373,15 @@ function disableAllButtons(){
     document.getElementById('doubleBtn').disabled = true
 }
 
+function cashout() {
+    player.bank += player.mainBet
+    msgBoard.textContent = 'Cashing out $ ' + player.bank
+}
+
 //event listeners
 document.addEventListener('DOMContentLoaded', initGame)
 document.getElementById('hitBtn').addEventListener('click', hit)
 document.getElementById('standBtn').addEventListener('click', stand)
 document.getElementById('buy-in-btn').addEventListener('click', cashIn)
 document.getElementById('main-bet-in-btn').addEventListener('click', startGame)
-
+document.getElementById('cashout'),addEventListener('click', cashout)
