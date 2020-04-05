@@ -10,6 +10,7 @@ let msgBoard = document.getElementById('messageBoard')
 let board = document.getElementById('board')
 let playerMainBetBox = document.getElementById('bet-main')
 let playerHand = document.getElementById('playerHand')
+let betsContainer = document.getElementById('bets-container')
 
 //create deck of cards - 5 - remove 10s 
 class Card {
@@ -112,6 +113,7 @@ function preStart(){
 
 //adds bet amt to player.mainBet - deals open hand - checks for bj
 function startGame(){
+    betsContainer.style.display = 'none'
     //add bet amount to players bet property
     player.mainBet = parseInt(document.getElementById('main-bet-in').value)
     //subtract bet from players bank & display
@@ -371,6 +373,7 @@ function reset() {
     // for (var j = 0; j < dealer.hand.length; j++) {
     //     dealer.discard.push(dealer.hand[j])
     // }
+
     console.log('player.bank: ' + player.bank)
     player.hand = []
     dealer.hand = []
@@ -390,6 +393,7 @@ function reset() {
     player.bank += player.mainBet
     player.mainBet = 0
     console.log('reset player.bank:' + player.bank)
+    betsContainer.style.display = 'block'
     document.getElementById('buyin-cashout-btns').style.display = 'none'
     
 
