@@ -18,6 +18,9 @@
 #bets-container {
     display: none;
 }
+#player-action-btns {
+    display: none;
+}
  #playerHand {
     height: 5em;
     width: 5em;

@@ -10,7 +10,9 @@ let msgBoard = document.getElementById('messageBoard')
 let board = document.getElementById('board')
 let playerMainBetBox = document.getElementById('bet-main')
 let playerHand = document.getElementById('playerHand')
+let playerActionBtns = document.getElementById('player-action-btns')
 let betsContainer = document.getElementById('bets-container')
+
 
 //create deck of cards - 5 - remove 10s 
 class Card {
@@ -110,9 +112,9 @@ function preStart(){
     document.getElementById('messageBoard').textContent = 'Place your bets below'
     document.getElementById('bets-container').style.display = 'block'
 }
-
 //adds bet amt to player.mainBet - deals open hand - checks for bj
 function startGame(){
+    playerActionBtns.style.display = 'block'
     betsContainer.style.display = 'none'
     //add bet amount to players bet property
     player.mainBet = parseInt(document.getElementById('main-bet-in').value)
@@ -140,6 +142,7 @@ function startGame(){
 function bJChecker() {
     //if player bj - payout
     if (player.hand[0][0].value + player.hand[1][0].value == 21) {
+        playerActionBtns.style.display = 'none'
         player.pau = true
         payOut()
         document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
@@ -148,6 +151,7 @@ function bJChecker() {
     }
     //if dealer bj - take
     if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
+        playerActionBtns.style.display = 'none'
         player.pau = true
         payOut()
         reset()
@@ -193,6 +197,7 @@ function bustChecker() {
     player.total = totals
     //if there aren't any valid totals, player has busted
     if (!totals.length) {
+        playerActionBtns.style.display = 'none'
         player.bust = true
         console.log('player.total: ' + player.total)
         console.log('running total: ' + runningTotal)
@@ -366,6 +371,7 @@ function payOut() {
 }
 
 function reset() {
+    betsContainer.style.display = 'block'
     //place all cards in discard rack
     // for (var i = 0; i < player.hand.length; i++) {
     //     dealer.discard.push(player.hand[i])
@@ -373,7 +379,6 @@ function reset() {
     // for (var j = 0; j < dealer.hand.length; j++) {
     //     dealer.discard.push(dealer.hand[j])
     // }
-
     console.log('player.bank: ' + player.bank)
     player.hand = []
     dealer.hand = []
@@ -393,7 +398,6 @@ function reset() {
     player.bank += player.mainBet
     player.mainBet = 0
     console.log('reset player.bank:' + player.bank)
-    betsContainer.style.display = 'block'
     document.getElementById('buyin-cashout-btns').style.display = 'none'
     
 
@@ -408,6 +412,8 @@ function hit() {
 
 //stand
 function stand() {
+    //hide action buttons
+    playerActionBtns.style.display = 'none'
     //if the array of potential totals are more than 1
     if (player.total.length > 1) {
         //take the higher potential total and assign it to players hand
