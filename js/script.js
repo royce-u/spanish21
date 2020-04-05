@@ -221,21 +221,32 @@ function dealerAction() {
     var aceCount = tempTotals.filter(x => x == 11).length
     //totals = possible totals (including Aces)
     var totals = [runningTotal]
+    //if hard 17 (with an ace)
+    if (runningTotal == 27 && aceCount == 1) {
+        document.getElementById('messageBoard').textContent = 'Dealer has ' + runningTotal
+        dealer.total = runningTotal
+        payOut()
+    }
     //if running total > soft 21 - minus 10
     if (runningTotal > 21 && aceCount > 0){
         while (aceCount > 0) {
             aceCount--
             runningTotal -= 10
-            dealer.hand.push(decks.deal())
-            document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
-            document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
+            //if NOT hard 17 w/ ace - add
+            if (runningTotal !== 17) {
+                dealer.hand.push(decks.deal())
+                document.getElementById('board').textContent += ' ' + dealer.hand[dealer.hand.length - 1][0].value
+                document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
+            }
+            else {
+                dealerAction()
+            }
         }
         // console.log('running total: ' + runningTotal)
         // console.log('ace count: ' + aceCount)
-        dealerAction()
     }
     //if soft 17 - hit
-    else if (runningTotal == 17 && aceCount == 1){
+    else if (runningTotal == 17 && aceCount > 1){
         document.getElementById('messageBoard').textContent = 'Dealer: ' + runningTotal
         dealer.hand.push(decks.deal())
         // console.log('running total: ' + runningTotal)
@@ -347,8 +358,8 @@ function payOut() {
         msgBoard.textContent += ' - PUSH'
         console.log('player.mainBet: ' + player.mainBet)
     }
-    //move money from bet spot to player bank & display
-    // reset()
+    //reveal buyin/cashout buttons
+    document.getElementById('buyin-cashout-btns').style.display = 'block'
     
 }
 
@@ -364,7 +375,7 @@ function reset() {
     player.hand = []
     dealer.hand = []
     //clear board
-    msgBoard.textContent= ' '
+    msgBoard.textContent= 'Place your bets below'
     board.textContent= ' '
     playerHand.textContent = ' '
 
@@ -379,6 +390,7 @@ function reset() {
     player.bank += player.mainBet
     player.mainBet = 0
     console.log('reset player.bank:' + player.bank)
+    document.getElementById('buyin-cashout-btns').style.display = 'none'
     
 
 }

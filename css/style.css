@@ -24,6 +24,9 @@
     color: black;
     background-color: white;
 }
+#buyin-cashout-btns {
+    display: none;
+}
 
 #playerBank {
     height: 1.5em;
