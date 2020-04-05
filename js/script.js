@@ -181,9 +181,9 @@ function bustChecker() {
         aceCount--
         runningTotal -= 10
         totals.push(runningTotal)
-        console.log('player.total: ' + player.total)
-        console.log('running total: ' + runningTotal)
-        console.log('totals: ' + totals)
+        // console.log('player.total: ' + player.total)
+        // console.log('running total: ' + runningTotal)
+        // console.log('totals: ' + totals)
     }
     //filter thru all potential totals, keep only ones that aren't busted
     totals = totals.filter(x => x <= 21)
@@ -252,7 +252,7 @@ function dealerAction() {
         dealerAction()
     }
     //if > hard 17 && < hard 21 - stand
-    else if (runningTotal >= 17 && runningTotal < 21){
+    else if (runningTotal >= 17 && runningTotal <= 21){
         document.getElementById('messageBoard').textContent = 'Dealer has ' + runningTotal
         dealer.total = runningTotal
         // console.log('running total: ' + runningTotal)
@@ -323,7 +323,7 @@ function payOut() {
     if (player.bust == true || dealer.total > player.total) {
         dealer.bank += player.mainBet
         player.mainBet = 0
-        msgBoard.textContent += ' Lose'
+        msgBoard.textContent += ' - Lose'
         console.log('player.mainBet: ' + player.mainBet)
     }
     //if dealer bust or lose - pay
@@ -332,19 +332,19 @@ function payOut() {
         dealer.bank -= player.mainBet
         //pay player double
         player.mainBet += player.mainBet
-        msgBoard.textContent += ' Winner'
+        msgBoard.textContent += ' - Winner'
         console.log('player.mainBet: ' + player.mainBet)
     }
     //if player gets 21
     else if (player.total == 21) {
         dealer.bank -= player.mainBet
         player.mainBet += player.mainBet
-        msgBoard.textContent += ' Winner'
+        msgBoard.textContent += ' - Winner'
         console.log('player.mainBet: ' + player.mainBet)
     }
     //if push - push
     else if (dealer.total == player.total) {
-        msgBoard.textContent += ' PUSH'
+        msgBoard.textContent += ' - PUSH'
         console.log('player.mainBet: ' + player.mainBet)
     }
     //move money from bet spot to player bank & display
