@@ -115,6 +115,8 @@ function startGame(){
     player.mainBet = parseInt(document.getElementById('main-bet-in').value)
     //subtract bet from players bank & display
     player.bank -= player.mainBet
+    console.log('player.mainBet: ' + [player.mainBet])
+    console.log('player.bank: ' + player.mainBet)
     document.getElementById('bet-main').textContent = player.mainBet
     // initial deal
     for (var i = 0; i < 2; i++) {
@@ -133,7 +135,6 @@ function bJChecker() {
     //if player bj - payout
     if (player.hand[0][0].value + player.hand[1][0].value == 21) {
         player.pau = true
-        player.bust = true
         payOut()
         document.getElementById('board').textContent += ' ' + dealer.hand[1][0].value
         reset()
@@ -142,7 +143,6 @@ function bJChecker() {
     //if dealer bj - take
     if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
         player.pau = true
-        player.bust = true
         payOut()
         reset()
         preStart()
@@ -183,7 +183,7 @@ function bustChecker() {
     }
     //filter thru all potential totals, keep only ones that aren't busted
     totals = totals.filter(x => x <= 21)
-    console.log('VALID totals: ' + totals)
+    // console.log('VALID totals: ' + totals)
     player.total = totals
     //if there aren't any valid totals, player has busted
     if (!totals.length) {
@@ -199,7 +199,7 @@ function bustChecker() {
         return
     }
     //if multiple total options, display both
-    if (totals > 1) {
+    if (totals.length > 1) {
         document.getElementById('messageBoard').textContent = totals[0] + ' or ' + totals[1]
     }
     //display total
@@ -218,6 +218,7 @@ function dealerAction() {
     var aceCount = tempTotals.filter(x => x == 11).length
     //totals = possible totals (including Aces)
     var totals = [runningTotal]
+    //if running total > soft 21 - minus 10
     if (runningTotal > 21 && aceCount > 0){
         while (aceCount > 0) {
             aceCount--
@@ -301,44 +302,48 @@ function cashIn() {
 }
 
 function payOut() {
+    //---------------------blackjack payouts---------------------
     //if player bj - pay
     if (player.hand[0][0].value + player.hand[1][0].value == 21) {
         dealer.bank -= (player.mainBet * 3/2)
         player.mainBet += (player.mainBet * 3/2)
         msgBoard.textContent = 'Player Blackjack'
-        console.log('what the fuck!?')
-        
+        console.log('player.mainBet: ' + player.mainBet)
     }
     //if dealer bj - scoop
     else if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21 && player.hand[0][0].value + player.hand[1][0].value !== 21) {
         dealer.bank += mainBet
         player.mainBet = 0
-        console.log('what the fuck!?')
+        msgBoard.textContent = 'Dealer Blackjack'
+        console.log('player.mainBet: ' + player.mainBet)
+    }
+    //if dealer wins or player bust- scoop
+    if (player.bust == true || dealer.total > player.total) {
+        dealer.bank += player.mainBet
+        player.mainBet = 0
+        msgBoard.textContent = 'Lose'
+        console.log('player.mainBet: ' + player.mainBet)
+    }
+    //if dealer bust or lose - pay
+    else if (dealer.bust == true || dealer.total < player.total) {
+        //subtract amount from dealer bank
+        dealer.bank -= player.mainBet
+        //pay player double
+        player.mainBet += player.mainBet
+        msgBoard.textContent = 'Winner'
+        console.log('player.mainBet: ' + player.mainBet)
     }
     //if player gets 21
     else if (player.total = 21) {
         dealer.bank -= player.mainBet
         player.mainBet += player.mainBet
-        console.log('what the fuck!?')
-    }
-    //if dealer bust or lose - pay
-    else if (dealer.bust == true || dealer.total > player.total) {
-        //subtract amount from dealer bank
-        dealer.bank -= player.mainBet
-        //pay player double
-        player.mainBet += player.mainBet
-        console.log('what the fuck!?')
-    }
-    //if dealer wins or player bust- scoop
-    else if (dealer.total > player.total || player.bust == true) {
-        dealer.bank += player.mainBet
-        player.mainBet = 0
-        console.log('what the fuck!?')
+        msgBoard.textContent = 'Winner'
+        console.log('player.mainBet: ' + player.mainBet)
     }
     //if push - push
     else if (dealer.total == player.total) {
         msgBoard.textContent = 'PUSH'
-        console.log('what the fuck!?')
+        console.log('player.mainBet: ' + player.mainBet)
     }
     //move money from bet spot to player bank & display
     // reset()
@@ -353,6 +358,7 @@ function reset() {
     // for (var j = 0; j < dealer.hand.length; j++) {
     //     dealer.discard.push(dealer.hand[j])
     // }
+    console.log('player.bank: ' + player.bank)
     player.hand = []
     dealer.hand = []
     //clear board
@@ -366,7 +372,7 @@ function reset() {
     player.bust = false
     player.pau = false
     //move bets into banks
-    player.bank += playerMainBetBox.textContent
+    player.bank += parseInt(playerMainBetBox.textContent )
     
 
 }
