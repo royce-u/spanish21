@@ -63,8 +63,8 @@ class Deck {
 class Player {
     constructor(name) {
         this.playerName = name
-        this.upCardBet = ''
-        this.downCardBet = ''
+        this.upCardBet = 0
+        this.downCardBet = 0
         this.insBet = false
         this.mainBet = 0
         this.bank = 0
@@ -143,11 +143,15 @@ function startGame(){
     document.getElementById('board').textContent = dealer.hand[0][0].value
     upCardBet()
     //check for bj
-    bJChecker()  
+    setTimeout(function(){
+        bJChecker() 
+    },4000)
 }
 
 // bj check - payout bj
 function bJChecker() {
+    //clear msg from upcard bet
+    msgBoard.textContent = ' '
     //if player bj - payout
     if (player.hand[0][0].value + player.hand[1][0].value == 21) {
         playerActionBtns.style.display = 'none'
@@ -293,7 +297,7 @@ function dealerAction() {
     //if > hard 21 - bust
     else if (runningTotal > 21) {
         dealer.bust = true
-        document.getElementById('messageBoard').textContent = runningTotal + ' Dealer BUST'
+        document.getElementById('messageBoard').textContent = runningTotal + ' - Dealer BUST'
         // console.log('running total: ' + runningTotal)
         // console.log('totals: ' + totals)
         payOut()
@@ -394,7 +398,7 @@ function upCardBet() {
         //payout upcardbet
         player.upCardBet *= 13
         //display upcard bet
-        playerUpCardBet = player.upCardBet
+        playerUpCardBet.textContent = player.upCardBet
         //play winning message
         msgBoard.textContent = 'Winner! - Suited Match Pays 13-1'
     }
@@ -406,7 +410,7 @@ function upCardBet() {
     else {
         dealer.bank += player.upCardBet
         player.upCardBet = 0
-        playerUpCardBet = player.upCardBet
+        playerUpCardBet.textContent = player.upCardBet
         msgBoard.textContent = 'No Match'
     }
 }
@@ -438,15 +442,14 @@ function reset() {
     //move bets into banks
     player.bank += player.mainBet
     player.bank += player.upCardBet
-    //updates bank display
-    playerBank.textContent = player.bank
-    //updates bet box
-    playerMainBetBox.textContent = ' '
-    playerUpCardBet.textContent = ' '
     //reset player bets
     player.mainBet = 0
     player.upCardBet = 0
-    console.log('reset player.bank:' + player.bank)
+    //updates bank display
+    playerBank.textContent = player.bank
+    //updates bet box display
+    playerMainBetBox.textContent = ' '
+    playerUpCardBet.textContent = ' '
     document.getElementById('buyin-cashout-btns').style.display = 'none'
     
 

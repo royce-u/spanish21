@@ -1,4 +1,4 @@
- body{
+body {
      background-color: rgb(20, 114, 15);
      margin: 0 auto;
      max-width: 50%;
@@ -8,9 +8,14 @@
  }
 
  #board {
-     height: 100px;
-     width: auto;
-     background-color: white;
+    height: 4em;
+    width: 10em;
+    text-align: center;
+    color: black;
+    margin: 0 auto;
+    /* position: relative;
+    top: -14em; */
+    background-color: white;
  }
  #bet-main {
     font-size: 2em;
@@ -71,7 +76,6 @@
     margin: 0 auto;
     position: relative;
     top: -14em;
-    
     background-color: white;
 }
 #buyin-cashout-btns {
@@ -83,13 +87,19 @@
     width: 5em;
     color: white;
     margin: 0 auto;
-    background-color: rgb(169, 104, 8);
+    background-color: rgb(37, 91, 10);
+    border: solid black 10px;
 }
 
 #messageBoard {
+    font-size: 1em;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 auto;
     height: 100px;
-    width: auto;
+    width: 200px;
     background-color: white;
+    border-radius: 30px;
 }
 
 #cash-container {
