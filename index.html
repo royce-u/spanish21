@@ -8,12 +8,13 @@
 </head>
 <body>
     <h1>Spanish 21</h1>
-    <div id="board">Board</div>
+    <div id="board"></div>
+    <div id="logo"><img src="./imagessp21longflat.jpg" ></div>
 
-    <div class="player">Player
+    <div class="player">
         <div id="bets">
-            <div id="bet-top-card"></div>
-            <div id="bet-btm-card"></div>
+            <div id="bet-up-card"></div>
+            <div id="bet-down-card"></div>
             <div id="bet-main"></div>
     </div>
         <div id="bet-Ins"></div>
@@ -27,6 +28,7 @@
         <input id="buy-in-btn" type="button" value="Buy In">
     </div>
     <div id="bets-container">
+        <input id="up-card-bet-amt" type="number" placeholder="Up-card Bet">
         <input id="main-bet-in" type="number" placeholder="Main Bet">
         <input id="main-bet-in-btn" type="button" value="Let's Play!">
     </div>
@@ -37,8 +39,8 @@
     <div id="player-action-btns">
         <button id="hitBtn">hit</button>
         <button id="standBtn">stand</button>
-        <button id="splitBtn">split</button>
-        <button id="doubleBtn">double</button>
+        <!-- <button id="splitBtn">split</button>
+        <button id="doubleBtn">double</button> -->
     </div>
     <script src="./js/script.js"></script>
     <script src="./js/dealer.js"></script>

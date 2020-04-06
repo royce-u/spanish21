@@ -1,5 +1,10 @@
  body{
      background-color: rgb(20, 114, 15);
+     margin: 0 auto;
+     max-width: 50%;
+     text-align: center;
+     width: 100%;
+     height: 50%;
  }
 
  #board {
@@ -8,28 +13,42 @@
      background-color: white;
  }
  #bet-main {
-    height: 4em;
-    width: 4em;
-    border: 2px solid rgb(244, 244, 16);
-    border-radius: 40px;
-    color: white;
+    font-size: 2em;
     text-align: center;
-    background-color: rgb(244, 244, 16)
+    vertical-align: middle;
+    height: 4em;
+    width: 3em;
+    border: 2px solid rgb(240, 240, 140);
+    border-radius: 15px;
+    margin: 0 auto;
+    position: relative;
+    top: .5em;
+    color: white;
+    background-image: "./images/spanish21logo.png";
+    background-color: rgb(20, 114, 15);
  }
- #bet-top-card {
+ #bet-up-card {
+     font-size: 1.5em;
      background-color: rgb(209, 68, 17);
-     height: 2em;
-     width: 2em;
-     border-radius: 20px;
-     margin: 1em;
+     height: 3em;
+     width: 3em;
+     margin: 0 auto;
+     border-radius: 50px;
+     position: relative;
+     left: -60px;
+     top: 5.5em;
      /* float: left; */
  }
- #bet-btm-card {
+ #bet-down-card {
+    font-size: 1.5em;
     background-color:rgb(209, 68, 17);
-    height: 2em;
-    width: 2em;
-    border-radius: 20px;
-    margin: 1em;
+    height: 3em;
+    width: 3em;
+    position: relative;
+    right: -60px;
+    top: 2.5em;
+    border-radius: 50px;
+    margin: 0 auto;
 }
 #bets {
     display: inline;
@@ -38,14 +57,21 @@
 }
 #bets-container {
     display: none;
+    /* position: relative;
+    margin: 0 auto; */
 }
 #player-action-btns {
     display: none;
 }
  #playerHand {
-    height: 5em;
-    width: 5em;
+    height: 4em;
+    width: 10em;
+    text-align: center;
     color: black;
+    margin: 0 auto;
+    position: relative;
+    top: -14em;
+    
     background-color: white;
 }
 #buyin-cashout-btns {
@@ -53,10 +79,11 @@
 }
 
 #playerBank {
-    height: 1.5em;
-    width: 2em;
+    height: 3em;
+    width: 5em;
     color: white;
-    background-color: burlywood;
+    margin: 0 auto;
+    background-color: rgb(169, 104, 8);
 }
 
 #messageBoard {

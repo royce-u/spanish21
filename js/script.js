@@ -13,6 +13,7 @@ let playerHand = document.getElementById('playerHand')
 let playerActionBtns = document.getElementById('player-action-btns')
 let betsContainer = document.getElementById('bets-container')
 let playerBank = document.getElementById('playerBank')
+let playerUpCardBet = document.getElementById('bet-up-card')
 
 
 
@@ -62,8 +63,8 @@ class Deck {
 class Player {
     constructor(name) {
         this.playerName = name
-        this.upCard = ''
-        this.downCard = ''
+        this.upCardBet = ''
+        this.downCardBet = ''
         this.insBet = false
         this.mainBet = 0
         this.bank = 0
@@ -119,25 +120,28 @@ function startGame(){
     playerActionBtns.style.display = 'block'
     betsContainer.style.display = 'none'
     //add bet amount to players bet property
+    player.upCardBet = parseInt(document.getElementById('up-card-bet-amt').value)
     player.mainBet = parseInt(document.getElementById('main-bet-in').value)
     //subtract bet from players bank & display
     player.bank -= player.mainBet
+    player.bank -= player.upCardBet
     //updates bank display
     playerBank.textContent = player.bank
     console.log('Start Game player.mainBet: ' + [player.mainBet])
     console.log('Start Game player.bank: ' + player.bank)
     playerMainBetBox.textContent = player.mainBet
+    playerUpCardBet.textContent = player.upCardBet
     // initial deal
     for (var i = 0; i < 2; i++) {
         player.hand.push(decks.deal())
         dealer.hand.push(decks.deal())
     }
     //display opening hand in msg board
-    // msgBoard.textContent = 'player has ' + player.hand[0][0].value + ' ' + player.hand[1][0].value
     bustChecker()
     //display open hands
     document.getElementById('playerHand').textContent = player.hand[0][0].value + ' ' + player.hand[1][0].value
     document.getElementById('board').textContent = dealer.hand[0][0].value
+    upCardBet()
     //check for bj
     bJChecker()  
 }
@@ -380,6 +384,33 @@ function payOut() {
     
 }
 
+function upCardBet() {
+    //bold players up card
+    // document.getElementById('playerHand')[0].textContent.style.fontWeight = '900'
+    if (dealer.hand[0][0].rank == player.hand[0][0].rank 
+        && dealer.hand[0][0].suit == player.hand[0][0].suit) {
+        //minus from dealer bank
+        dealer.bank -= (player.upCardBet * 13)
+        //payout upcardbet
+        player.upCardBet *= 13
+        //display upcard bet
+        playerUpCardBet = player.upCardBet
+        //play winning message
+        msgBoard.textContent = 'Winner! - Suited Match Pays 13-1'
+    }
+    else if (dealer.hand[0][0].rank == player.hand[0][0].rank) {
+        dealer.bank -= (upCardBet *= 3)
+        player.upCardBet *= 3
+        msgBoard.textContent = 'Winner! - Any Match Pays 3-1'
+    }
+    else {
+        dealer.bank += player.upCardBet
+        player.upCardBet = 0
+        playerUpCardBet = player.upCardBet
+        msgBoard.textContent = 'No Match'
+    }
+}
+
 function reset() {
     betsContainer.style.display = 'block'
     //place all cards in discard rack
@@ -406,12 +437,15 @@ function reset() {
     dealer.total = 0
     //move bets into banks
     player.bank += player.mainBet
+    player.bank += player.upCardBet
     //updates bank display
     playerBank.textContent = player.bank
     //updates bet box
     playerMainBetBox.textContent = ' '
-
+    playerUpCardBet.textContent = ' '
+    //reset player bets
     player.mainBet = 0
+    player.upCardBet = 0
     console.log('reset player.bank:' + player.bank)
     document.getElementById('buyin-cashout-btns').style.display = 'none'
     
