@@ -8,8 +8,9 @@ body {
  }
 
  #board {
-    height: 4em;
-    width: 10em;
+    height: 1em;
+    width: 5em;
+    font-size: 3em;
     text-align: center;
     color: black;
     margin: 0 auto;
@@ -29,7 +30,7 @@ body {
     position: relative;
     top: .5em;
     color: white;
-    background-image: "./images/spanish21logo.png";
+    /* background: url("./images/spanish21logo.png"); */
     background-color: rgb(20, 114, 15);
  }
  #bet-up-card {
@@ -61,16 +62,19 @@ body {
     width: 6em;
 }
 #bets-container {
+    width: 115px;
     display: none;
-    /* position: relative;
-    margin: 0 auto; */
+    text-align: center;
+    margin: 0 auto;
 }
 #player-action-btns {
     display: none;
 }
  #playerHand {
-    height: 4em;
-    width: 10em;
+    font-size: 1em;
+    height: 2em;
+    width: 7em;
+    padding-top: 15px;
     text-align: center;
     color: black;
     margin: 0 auto;
@@ -83,23 +87,26 @@ body {
 }
 
 #playerBank {
-    height: 3em;
-    width: 5em;
-    color: white;
+    font-size: 2em;
+    height: 2em;
+    width: 3em;
+    text-align: center;
+    padding-top: 1em;
     margin: 0 auto;
+    color: white;
     background-color: rgb(37, 91, 10);
     border: solid black 10px;
 }
 
 #messageBoard {
     font-size: 1em;
+    padding-top: 1.7em;
     text-align: center;
-    vertical-align: middle;
     margin: 0 auto;
-    height: 100px;
+    height: 50px;
     width: 200px;
     background-color: white;
-    border-radius: 30px;
+    border-radius: 15px;
 }
 
 #cash-container {

@@ -14,7 +14,7 @@ let playerActionBtns = document.getElementById('player-action-btns')
 let betsContainer = document.getElementById('bets-container')
 let playerBank = document.getElementById('playerBank')
 let playerUpCardBet = document.getElementById('bet-up-card')
-
+let playerDownCardBet = document.getElementById('bet-down-card')
 
 
 //create deck of cards - 5 - remove 10s 
@@ -121,16 +121,19 @@ function startGame(){
     betsContainer.style.display = 'none'
     //add bet amount to players bet property
     player.upCardBet = parseInt(document.getElementById('up-card-bet-amt').value)
+    player.downCardBet = parseInt(document.getElementById('down-card-bet-amt').value)
     player.mainBet = parseInt(document.getElementById('main-bet-in').value)
     //subtract bet from players bank & display
-    player.bank -= player.mainBet
     player.bank -= player.upCardBet
+    player.bank -= player.downCardBet
+    player.bank -= player.mainBet
     //updates bank display
     playerBank.textContent = player.bank
-    console.log('Start Game player.mainBet: ' + [player.mainBet])
+    console.log('Start Game player.mainBet: ' + player.mainBet)
     console.log('Start Game player.bank: ' + player.bank)
-    playerMainBetBox.textContent = player.mainBet
     playerUpCardBet.textContent = player.upCardBet
+    playerDownCardBet.textContent = player.downCardBet
+    playerMainBetBox.textContent = player.mainBet
     // initial deal
     for (var i = 0; i < 2; i++) {
         player.hand.push(decks.deal())
@@ -143,9 +146,8 @@ function startGame(){
     document.getElementById('board').textContent = dealer.hand[0][0].value
     upCardBet()
     //check for bj
-    setTimeout(function(){
-        bJChecker() 
-    },4000)
+    bJChecker()
+    
 }
 
 // bj check - payout bj
@@ -164,6 +166,10 @@ function bJChecker() {
     //if dealer bj - take
     if (dealer.hand[0][0].value + dealer.hand[1][0].value == 21) {
         playerActionBtns.style.display = 'none'
+        //reveal dealers down card
+        preDealer()
+        //run down card bet
+        downCardBet()
         player.pau = true
         payOut()
         reset()
@@ -220,6 +226,8 @@ function bustChecker() {
         document.getElementById('messageBoard').textContent = 'BUST!'
         payOut()
         preDealer()
+        //run down card bonus
+        downCardBet()
         return
     }
     //if multiple total options, display both
@@ -403,15 +411,46 @@ function upCardBet() {
         msgBoard.textContent = 'Winner! - Suited Match Pays 13-1'
     }
     else if (dealer.hand[0][0].rank == player.hand[0][0].rank) {
-        dealer.bank -= (upCardBet *= 3)
+        dealer.bank -= (player.upCardBet *= 3)
         player.upCardBet *= 3
         msgBoard.textContent = 'Winner! - Any Match Pays 3-1'
     }
     else {
-        dealer.bank += player.upCardBet
-        player.upCardBet = 0
-        playerUpCardBet.textContent = player.upCardBet
-        msgBoard.textContent = 'No Match'
+        setTimeout(function(){
+            dealer.bank += player.upCardBet
+            player.upCardBet = 0
+            playerUpCardBet.textContent = player.upCardBet
+            msgBoard.textContent = 'No Match'
+        },3000)
+    }
+}
+
+function downCardBet() {
+    //bold players up card
+    // document.getElementById('playerHand')[0].textContent.style.fontWeight = '900'
+    if (dealer.hand[1][0].rank == player.hand[1][0].rank 
+        && dealer.hand[1][0].suit == player.hand[1][0].suit) {
+        //minus from dealer bank
+        dealer.bank -= (player.downCardBet * 13)
+        //payout downcardbet
+        player.downCardBet *= 13
+        //display upcard bet
+        playerDownCardBet.textContent = player.downCardBet
+        //play winning message
+        msgBoard.textContent = 'Winner! - Suited Match Pays 13-1'
+    }
+    else if (dealer.hand[1][0].rank == player.hand[1][0].rank) {
+        dealer.bank -= (player.downCardBet *= 3)
+        player.downCardBet *= 3
+        msgBoard.textContent = 'Winner! - Any Match Pays 3-1'
+    }
+    else {
+        setTimeout(function(){
+            dealer.bank += player.downCardBet
+            player.downCardBet = 0
+            playerDownCardBet.textContent = player.downCardBet
+            msgBoard.textContent = 'No Match'
+        },4000)
     }
 }
 
@@ -442,14 +481,17 @@ function reset() {
     //move bets into banks
     player.bank += player.mainBet
     player.bank += player.upCardBet
+    player.bank += player.downCardBet
     //reset player bets
-    player.mainBet = 0
     player.upCardBet = 0
+    player.downCardBet = 0
+    player.mainBet = 0
     //updates bank display
     playerBank.textContent = player.bank
     //updates bet box display
-    playerMainBetBox.textContent = ' '
     playerUpCardBet.textContent = ' '
+    playerDownCardBet.textContent = ' '
+    playerMainBetBox.textContent = ' '
     document.getElementById('buyin-cashout-btns').style.display = 'none'
     
 
@@ -475,15 +517,17 @@ function stand() {
     if (player.hand.length == 2) {
         player.total = player.hand[0][0].value + player.hand[1][0].value
     }
-
     console.log('player.total: ' + player.total)
     //log players playable total
-    document.getElementById('messageBoard').textContent = 'Player stands at ' + player.total
+    msgBoard.textContent = 'Player stands at ' + player.total
+    //display dealer down card
+    preDealer()
+    //run down card bonus
+    downCardBet()
     //set delay to clear board & turn it over to the dealer
     setTimeout(function () {
-        document.getElementById('messageBoard').textContent = ''
+        msgBoard.textContent = ''
         // disableAllButtons()
-        preDealer()
         dealerAction()
     }, 2000)
 }
