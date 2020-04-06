@@ -1,5 +1,5 @@
  body{
-     background-color: aqua;
+     background-color: rgb(20, 114, 15);
  }
 
  #board {
@@ -8,13 +8,34 @@
      background-color: white;
  }
  #bet-main {
+    height: 4em;
+    width: 4em;
+    border: 2px solid rgb(244, 244, 16);
+    border-radius: 40px;
+    color: white;
+    text-align: center;
+    background-color: rgb(244, 244, 16)
+ }
+ #bet-top-card {
+     background-color: rgb(209, 68, 17);
+     height: 2em;
+     width: 2em;
+     border-radius: 20px;
+     margin: 1em;
+     /* float: left; */
+ }
+ #bet-btm-card {
+    background-color:rgb(209, 68, 17);
     height: 2em;
     width: 2em;
-    border: 2px solid green;
     border-radius: 20px;
-    color: white;
-    background-color: green
- }
+    margin: 1em;
+}
+#bets {
+    display: inline;
+    height: 4em;
+    width: 6em;
+}
 #bets-container {
     display: none;
 }

@@ -12,6 +12,8 @@ let playerMainBetBox = document.getElementById('bet-main')
 let playerHand = document.getElementById('playerHand')
 let playerActionBtns = document.getElementById('player-action-btns')
 let betsContainer = document.getElementById('bets-container')
+let playerBank = document.getElementById('playerBank')
+
 
 
 //create deck of cards - 5 - remove 10s 
@@ -120,9 +122,11 @@ function startGame(){
     player.mainBet = parseInt(document.getElementById('main-bet-in').value)
     //subtract bet from players bank & display
     player.bank -= player.mainBet
+    //updates bank display
+    playerBank.textContent = player.bank
     console.log('Start Game player.mainBet: ' + [player.mainBet])
     console.log('Start Game player.bank: ' + player.bank)
-    document.getElementById('bet-main').textContent = player.mainBet
+    playerMainBetBox.textContent = player.mainBet
     // initial deal
     for (var i = 0; i < 2; i++) {
         player.hand.push(decks.deal())
@@ -173,6 +177,8 @@ function bustChecker() {
     var totals = [runningTotal]
     //check for 21
     if (runningTotal == 21){
+        //hide action buttons
+        playerActionBtns.style.display = 'none'
         document.getElementById('messageBoard').textContent = 'Player has 21'
         player.total = runningTotal
         payOut()
@@ -313,7 +319,7 @@ function cashIn() {
     //display changing money 
     document.getElementById('messageBoard').textContent = 'Changing  $'
     //add money to player bank
-    document.getElementById('playerBank').textContent = player.bank
+    playerBank.textContent = player.bank
     //display good luck message
     document.getElementById('messageBoard').textContent = 'Good Luck!'
     //
@@ -365,6 +371,10 @@ function payOut() {
         msgBoard.textContent += ' - PUSH'
         console.log('player.mainBet: ' + player.mainBet)
     }
+    //updates bank display
+    playerBank.textContent = player.bank
+    //updates bet box
+    playerMainBetBox.textContent = player.mainBet
     //reveal buyin/cashout buttons
     document.getElementById('buyin-cashout-btns').style.display = 'block'
     
@@ -396,6 +406,11 @@ function reset() {
     dealer.total = 0
     //move bets into banks
     player.bank += player.mainBet
+    //updates bank display
+    playerBank.textContent = player.bank
+    //updates bet box
+    playerMainBetBox.textContent = ' '
+
     player.mainBet = 0
     console.log('reset player.bank:' + player.bank)
     document.getElementById('buyin-cashout-btns').style.display = 'none'
